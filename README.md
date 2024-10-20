@@ -1,0 +1,1 @@
+This project is a rust code to generate qrcodes in function of data size and error correction levels.
