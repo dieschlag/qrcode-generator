@@ -1,5 +1,5 @@
-use core::num;
-use std::error::Error;
+use std::cmp::max;
+
 /// Initialise les tables logarithmiques et antilogarithmiques pour GF(256)
 pub(crate) fn init_tables() -> (Vec<u8>, Vec<u8>) {
     let mut log_table = vec![0; 256];
@@ -81,72 +81,62 @@ pub(crate) fn get_generator(exp: u32) -> Vec<u8> {
     result
 }
 
-pub(crate) fn adjust_polynomials(
-    mut message: Vec<u8>,
-    mut generator: Vec<u8>,
-    log_table: &Vec<u8>,
-    antilog_table: &Vec<u8>,
-) -> (Vec<u8>, Vec<u8>) {
-    let message_length = message.len();
-    let generator_length = generator.len();
-    for _ in 0..generator_length {
-        message.insert(0, 0);
-    }
-    for _ in 0..message_length {
-        generator.insert(0, 0);
-    }
-
-    (message, generator)
-}
-
 pub(crate) fn adjust_then_xor(
     message: Vec<u8>,
-    generator: &Vec<u8>,
+    mut generator: &Vec<u8>,
     log_table: &Vec<u8>,
     antilog_table: &Vec<u8>,
 ) -> Vec<u8> {
-    println!("message: {message:?}");
+    println!("message: {:?} - {}", message, message.len());
+    println!("generator: {:?} - {}", generator, generator.len());
     let generator = multiply_polynomials(
         &vec![message.last().unwrap().clone()],
         &generator,
         &log_table,
         &antilog_table,
     );
-    println!("generator: {generator:?}");
+    println!("adusted_generator: {:?} - {}", generator, generator.len());
 
     let mut result: Vec<u8> = vec![0; generator.len()];
 
     for i in 0..message.len() {
         result[i] = generator[i] ^ message[i];
     }
-    println!("result: {result:?} \n");
+    println!("result: {:?} - {}\n", result, result.len());
     result
 }
 
-pub(crate) fn reed_solomon(message: Vec<u8>) -> Vec<u8> {
+pub(crate) fn reed_solomon(mut message: Vec<u8>) -> Vec<u8> {
+    println!("********* Appying reed_solomons *********\n\n");
+    println!("original_message: {message:?}");
     let (log_table, antilog_table) = init_tables();
     let number_divisions = message.len();
-    let number_ecc = 7;
-    let generator = get_generator(number_ecc);
+    let number_ecc = 10;
+    let mut generator = get_generator(number_ecc);
+    println!("original_generator: {generator:?} \n");
     // println!("{generator:?}");
-    let (mut adapted_message, adapted_generator) =
-        adjust_polynomials(message, generator, &log_table, &antilog_table);
-
-    for _ in 0..number_divisions {
-        adapted_message = adjust_then_xor(
-            adapted_message,
-            &adapted_generator,
-            &log_table,
-            &antilog_table,
-        );
-        adapted_message.pop();
-        // println!("{adapted_message:?}");
+    let message_padding_length = generator.len();
+    let generator_padding_length = message.len();
+    for _ in 0..generator_padding_length {
+        generator.insert(0, 0);
     }
-    adapted_message
-    // println!("adapted_message: {adapted_message:?}");
-    // println!("{}", adapted_message.len());
-    // println!("{}", adapted_generator.len());
-    // println!("adapted_generator: {adapted_generator:?}");
-    // vec![]
-    // for _ in 0..number_divisions {}
+    for _ in 0..message_padding_length {
+        message.insert(0, 0);
+    }
+    println!("modified_message: {message:?}");
+    println!("modified generator: {generator:?} \n");
+
+    // First iteration
+    message = adjust_then_xor(message, &generator, &log_table, &antilog_table);
+
+    // Other iterations
+    for i in 1..number_divisions {
+        println!("Iter: {}", i + 1);
+        message.pop();
+        generator.remove(0);
+        message = adjust_then_xor(message, &generator, &log_table, &antilog_table);
+    }
+    message.pop();
+    generator.remove(0);
+    adjust_then_xor(message, &generator, &log_table, &antilog_table)
 }
