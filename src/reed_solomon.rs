@@ -136,7 +136,5 @@ pub(crate) fn reed_solomon(mut message: Vec<u8>) -> Vec<u8> {
         generator.remove(0);
         message = adjust_then_xor(message, &generator, &log_table, &antilog_table);
     }
-    message.pop();
-    generator.remove(0);
-    adjust_then_xor(message, &generator, &log_table, &antilog_table)
+    message
 }
