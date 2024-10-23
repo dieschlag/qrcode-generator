@@ -1,9 +1,9 @@
 use std::error::Error;
 
-pub(crate) fn encoder(text: String) -> Result<Vec<u8>, Box<dyn Error>> {
+pub(crate) fn encoder(text: String) -> Vec<u8> {
     let copy = text.clone().into_bytes();
     let mut bytes = text.clone().into_bytes();
-    let length: u8 = text.len().try_into()?;
+    let length: u8 = text.len().try_into().unwrap();
     bytes.insert(0, length);
     let mut result: Vec<u8> = Vec::new();
 
@@ -35,7 +35,7 @@ pub(crate) fn encoder(text: String) -> Result<Vec<u8>, Box<dyn Error>> {
     }
     let mut single_line_bytes = String::new();
     println!("Print each byte \n");
-    for bite in result {
+    for bite in result.clone() {
         println!("{bite:08b}");
         single_line_bytes.push_str(&format!("{bite:08b}"));
     }
@@ -53,5 +53,5 @@ pub(crate) fn encoder(text: String) -> Result<Vec<u8>, Box<dyn Error>> {
     println!("original: {copy_single_line_bytes}");
     println!("modified: {single_line_bytes}");
 
-    return Ok(vec![]);
+    return result;
 }
