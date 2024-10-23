@@ -1,9 +1,12 @@
 use encoder::encoder;
+use reed_solomon::reed_solomon;
+
 mod encoder;
+mod reed_solomon;
 
 fn main() {
-    let error_correction = "L";
-    let version = 1;
-    let string = "hello world";
-    encoder(String::from(string));
+    // println!("{:?}", reed_solomon());
+    let result = reed_solomon(encoder(String::from("hello world")));
+    println!("result: {:?}", result);
+    // println!("{}", 256 ^ 285)
 }
