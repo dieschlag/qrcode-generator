@@ -1,5 +1,3 @@
-use std::error::Error;
-
 pub(crate) fn encoder(text: String) -> Vec<u8> {
     let copy = text.clone().into_bytes();
     let mut bytes = text.clone().into_bytes();

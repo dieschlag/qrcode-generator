@@ -1,5 +1,3 @@
-use std::cmp::max;
-
 /// Initialise les tables logarithmiques et antilogarithmiques pour GF(256)
 pub(crate) fn init_tables() -> (Vec<u8>, Vec<u8>) {
     let mut log_table = vec![0; 256];
@@ -83,50 +81,62 @@ pub(crate) fn get_generator(exp: u32) -> Vec<u8> {
 
 pub(crate) fn adjust_then_xor(
     message: Vec<u8>,
-    mut generator: &Vec<u8>,
+    generator: &Vec<u8>,
     log_table: &Vec<u8>,
     antilog_table: &Vec<u8>,
 ) -> Vec<u8> {
     println!("message: {:?} - {}", message, message.len());
     println!("generator: {:?} - {}", generator, generator.len());
+
+    // generator must be multiplies with main coeff of message
     let generator = multiply_polynomials(
         &vec![message.last().unwrap().clone()],
         &generator,
         &log_table,
         &antilog_table,
     );
+
     println!("adusted_generator: {:?} - {}", generator, generator.len());
 
     let mut result: Vec<u8> = vec![0; generator.len()];
 
+    // Determing result of XOR between message and generator
     for i in 0..message.len() {
         result[i] = generator[i] ^ message[i];
     }
+
     println!("result: {:?} - {}\n", result, result.len());
+
     result
 }
 
 pub(crate) fn reed_solomon(mut message: Vec<u8>) -> Vec<u8> {
     println!("********* Appying reed_solomons *********\n\n");
+
     println!("original_message: {message:?}");
+
+    // Initializing log/antilog tables and parameters to use
     let (log_table, antilog_table) = init_tables();
-    let number_divisions = message.len();
-    let number_ecc = 10;
-    let mut generator = get_generator(number_ecc);
+    let number_divisions = message.len(); // Number of iterations to get error correction codewords, also represents padding length for generator
+    let number_ecc = 10; // Number of ecc we want to get, TODO: determine dynamically
+    let mut generator = get_generator(number_ecc); // Generator has shape (x+1)(x+2)...(x+2^n)
+    let message_padding_length = generator.len(); // Used to determine padding for generator
+
     println!("original_generator: {generator:?} \n");
-    // println!("{generator:?}");
-    let message_padding_length = generator.len();
-    let generator_padding_length = message.len();
-    for _ in 0..generator_padding_length {
+
+    // Adding padding to both message and generator so that they are the same length
+    for _ in 0..number_divisions - 1 {
         generator.insert(0, 0);
     }
-    for _ in 0..message_padding_length {
+    for _ in 0..message_padding_length - 1 {
         message.insert(0, 0);
     }
+
     println!("modified_message: {message:?}");
     println!("modified generator: {generator:?} \n");
 
     // First iteration
+    println!("Iter: 1");
     message = adjust_then_xor(message, &generator, &log_table, &antilog_table);
 
     // Other iterations
@@ -136,5 +146,6 @@ pub(crate) fn reed_solomon(mut message: Vec<u8>) -> Vec<u8> {
         generator.remove(0);
         message = adjust_then_xor(message, &generator, &log_table, &antilog_table);
     }
+    message.pop();
     message
 }
