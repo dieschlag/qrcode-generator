@@ -1,8 +1,9 @@
-// Goal is to get a vector of 1 and 0 matching visual distribution of bits on our QR code before data masking
-// We will use a 1-D vector to represent this distribution
-// This 1-D vector will be used to encode matrix, considering each p elements, we have a new line where n is the number of columns we would have in our matric
-// To note: with QR codes, we use square matrixes so the n is unamiguous between columns and lines
+/// Goal is to get a vector of 1 and 0 matching visual distribution of bits on our QR code before data masking
+/// We will use a 1-D vector to represent this distribution
+/// This 1-D vector will be used to encode matrix, considering each p elements, we have a new line where n is the number of columns we would have in our matric
+/// To note: with QR codes, we use square matrixes so the n is unamiguous between columns and lines
 
+/// Data to encode in QR Code is represented as a Chain, which is a wrapper over a classic vector, with a tracker of current index to travel along data;
 pub(crate) struct Chain {
     pub(crate) data: Vec<u8>,
     pub(crate) index: usize,
@@ -99,23 +100,19 @@ pub(crate) fn module_placement(data: Vec<u8>) {
     result[(n - 7) * n + 8] = 1;
 
     // ===== Placing data inside matrix =====
-    let mut count: u8 = 0;
+
     // First four columns (space under the right finder pattern)
     for i in 0..4 {
         if i % 2 == 0 {
             for j in 0..(n - 9) {
                 result[(n - 1 - j) * n + n - 1 - 2 * i] = bits.next().unwrap();
-                count += 1;
                 result[(n - 1 - j) * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
-                count += 1;
             }
         } else {
             for j in 9..n {
                 result[j * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
-                count += 1;
 
                 result[j * n + n - 1 - (2 * i)] = bits.next().unwrap();
-                count += 1;
             }
         }
     }
@@ -125,19 +122,15 @@ pub(crate) fn module_placement(data: Vec<u8>) {
             for j in 0..n {
                 if j != n - 7 {
                     result[(n - 1 - j) * n + n - 9 - 2 * i] = bits.next().unwrap();
-                    count += 1;
 
                     result[(n - 1 - j) * n + n - 9 - (2 * i + 1)] = bits.next().unwrap();
-                    count += 1;
                 }
             }
         } else {
             for j in 0..n {
                 if j != 6 {
                     result[j * n + n - 9 - (2 * i + 1)] = bits.next().unwrap();
-                    count += 1;
                     result[j * n + n - 9 - (2 * i)] = bits.next().unwrap();
-                    count += 1;
                 }
             }
         }
@@ -146,9 +139,7 @@ pub(crate) fn module_placement(data: Vec<u8>) {
     // Filling space between vertical timing and rest of data
     for j in 0..4 {
         result[(n - 9 - j) * n + 8] = bits.next().unwrap();
-        count += 1;
         result[(n - 9 - j) * n + 7] = bits.next().unwrap();
-        count += 1;
     }
 
     // Filling space between the two left finder patterns-
@@ -156,16 +147,12 @@ pub(crate) fn module_placement(data: Vec<u8>) {
         if i % 2 == 0 {
             for j in 0..4 {
                 result[(9 + j) * n + (4 - 2 * i)] = bits.next().unwrap();
-                count += 1;
                 result[(9 + j) * n + (5 - 2 * i)] = bits.next().unwrap();
-                count += 1;
             }
         } else {
             for j in 0..4 {
                 result[(n - 9 - j) * n + (5 - 2 * i)] = bits.next().unwrap();
-                count += 1;
                 result[(n - 9 - j) * n + (4 - 2 * i)] = bits.next().unwrap();
-                count += 1;
             }
         }
     }
