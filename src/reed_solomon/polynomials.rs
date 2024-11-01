@@ -57,11 +57,12 @@ pub(crate) fn multiply_polynomials(
     antilog_table: &Vec<u8>,
 ) -> Vec<u8> {
     let mut result = vec![0; p.len() + q.len() - 1]; // Le degré max du produit est p.len() + q.len() - 2
+    let size = result.len();
 
     // Multiplier chaque coefficient de p avec chaque coefficient de q
     for (i, &p_coef) in p.iter().enumerate() {
         for (j, &q_coef) in q.iter().enumerate() {
-            result[i + j] ^= multiply(p_coef, q_coef, &log_table, &antilog_table)
+            result[(i + j)] ^= multiply(p_coef, q_coef, &log_table, &antilog_table)
         }
     }
 
