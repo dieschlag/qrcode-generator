@@ -21,8 +21,8 @@ impl Chain {
 
 pub(crate) fn module_placement(data: Vec<u8>) {
     // data is the result from previous step (here: the adding of reed-soloms error correction codewords)
-    // We define, which is simply the len of data
-    let n = data.len();
+    // We define, which is simply the len of qrcode, here
+    let n = 21;
 
     let mut bits: Vec<u8> = Vec::new();
     for value in data.iter() {
@@ -100,7 +100,7 @@ pub(crate) fn module_placement(data: Vec<u8>) {
 
     // ===== Placing data inside matrix =====
     let mut count = 0;
-    // First two columns:
+    // First four columns (space under the right finder pattern)
     for i in 0..4 {
         if i % 2 == 0 {
             for j in 0..(n - 9) {
@@ -115,20 +115,25 @@ pub(crate) fn module_placement(data: Vec<u8>) {
         }
     }
 
+    // Filling space between finder patterns and avoiding horizontal timing pattern
     for i in 0..2 {
         if i % 2 == 0 {
-            for j in 0..(n - 1) {
-                result[(n - 1 - j) * n + n - 1 - 2 * i] = bits.next().unwrap();
-                count += 1;
-                result[(n - 1 - j) * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
-                count += 1;
+            for j in 0..n {
+                if j != n - 7 {
+                    result[(n - 1 - j) * n + n - 9 - 2 * i] = count;
+                    count += 1;
+                    result[(n - 1 - j) * n + n - 9 - (2 * i + 1)] = count;
+                    count += 1;
+                }
             }
         } else {
             for j in 0..n {
-                result[j * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
-                count += 1;
-                result[j * n + n - 1 - (2 * i)] = bits.next().unwrap();
-                count += 1;
+                if j != 6 {
+                    result[j * n + n - 9 - (2 * i + 1)] = count;
+                    count += 1;
+                    result[j * n + n - 9 - (2 * i)] = count;
+                    count += 1;
+                }
             }
         }
     }
@@ -140,11 +145,11 @@ pub(crate) fn module_placement(data: Vec<u8>) {
 // We define a display function for debug purposes and encoding visualiton
 fn display(list: &Vec<u8>, n: usize) {
     for i in 0..n {
-        let mut line = String::new();
         for j in 0..n {
-            line.push_str(&format!(" {} ", &list[i * n + j].to_string()));
+            // line.push_str(&format!(" {} ", &list[i * n + j].to_string()));
+            print!("{:4}", &list[i * n + j].to_string())
         }
-        println!("{line}");
+        println!("\n");
     }
 }
 
