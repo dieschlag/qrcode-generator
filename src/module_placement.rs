@@ -32,7 +32,7 @@ pub(crate) fn module_placement(data: Vec<u8>) {
             v <<= 1; // Shift left to prepare for the next bit
         }
     }
-
+    println!("Len: {}", bits.len());
     let mut single_line_bytes = String::new();
 
     for bite in data {
@@ -99,41 +99,73 @@ pub(crate) fn module_placement(data: Vec<u8>) {
     result[(n - 7) * n + 8] = 1;
 
     // ===== Placing data inside matrix =====
-    let mut count = 0;
+    let mut count: u8 = 0;
     // First four columns (space under the right finder pattern)
     for i in 0..4 {
         if i % 2 == 0 {
             for j in 0..(n - 9) {
                 result[(n - 1 - j) * n + n - 1 - 2 * i] = bits.next().unwrap();
+                count += 1;
                 result[(n - 1 - j) * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
+                count += 1;
             }
         } else {
             for j in 9..n {
                 result[j * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
+                count += 1;
+
                 result[j * n + n - 1 - (2 * i)] = bits.next().unwrap();
+                count += 1;
             }
         }
     }
-
     // Filling space between finder patterns and avoiding horizontal timing pattern
     for i in 0..2 {
-        if i % 2 == 0 {
+        if i % 2 == 1 {
             for j in 0..n {
                 if j != n - 7 {
-                    result[(n - 1 - j) * n + n - 9 - 2 * i] = count;
+                    result[(n - 1 - j) * n + n - 9 - 2 * i] = bits.next().unwrap();
                     count += 1;
-                    result[(n - 1 - j) * n + n - 9 - (2 * i + 1)] = count;
+
+                    result[(n - 1 - j) * n + n - 9 - (2 * i + 1)] = bits.next().unwrap();
                     count += 1;
                 }
             }
         } else {
             for j in 0..n {
                 if j != 6 {
-                    result[j * n + n - 9 - (2 * i + 1)] = count;
+                    result[j * n + n - 9 - (2 * i + 1)] = bits.next().unwrap();
                     count += 1;
-                    result[j * n + n - 9 - (2 * i)] = count;
+                    result[j * n + n - 9 - (2 * i)] = bits.next().unwrap();
                     count += 1;
                 }
+            }
+        }
+    }
+
+    // Filling space between vertical timing and rest of data
+    for j in 0..4 {
+        result[(n - 9 - j) * n + 8] = bits.next().unwrap();
+        count += 1;
+        result[(n - 9 - j) * n + 7] = bits.next().unwrap();
+        count += 1;
+    }
+
+    // Filling space between the two left finder patterns-
+    for i in 0..3 {
+        if i % 2 == 0 {
+            for j in 0..4 {
+                result[(9 + j) * n + (4 - 2 * i)] = bits.next().unwrap();
+                count += 1;
+                result[(9 + j) * n + (5 - 2 * i)] = bits.next().unwrap();
+                count += 1;
+            }
+        } else {
+            for j in 0..4 {
+                result[(n - 9 - j) * n + (5 - 2 * i)] = bits.next().unwrap();
+                count += 1;
+                result[(n - 9 - j) * n + (4 - 2 * i)] = bits.next().unwrap();
+                count += 1;
             }
         }
     }
