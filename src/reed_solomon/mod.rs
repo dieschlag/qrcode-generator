@@ -1,6 +1,6 @@
 use polynomials::{init_tables, multiply, multiply_polynomials};
 
-mod polynomials;
+pub(crate) mod polynomials;
 
 pub(crate) fn reed_solomon(mut message: Vec<u8>) -> Vec<u8> {
     println!("**************************** Appying reed_solomons ****************************\n\n");
@@ -24,10 +24,10 @@ pub(crate) fn reed_solomon(mut message: Vec<u8>) -> Vec<u8> {
 
     // Adding padding to both message and generator so that they are the same length
     for _ in 0..number_divisions - 1 {
-        generator.insert(0, 0);
+        generator.push(0);
     }
     for _ in 0..message_padding_length - 1 {
-        message.insert(0, 0);
+        message.push(0);
     }
 
     println!("modified_message: {message:?}");
@@ -39,8 +39,8 @@ pub(crate) fn reed_solomon(mut message: Vec<u8>) -> Vec<u8> {
     // Main term of result is 0, we remove it and shorten generator by a power before next iteration
     for _ in 0..number_divisions {
         message = adjust_then_xor(message, &generator, &log_table, &antilog_table);
-        message.pop();
-        generator.remove(0);
+        message.remove(0);
+        generator.pop();
     }
 
     // Returning message
@@ -59,7 +59,7 @@ pub(crate) fn get_generator(exp: u32) -> Vec<u8> {
     }
     for _ in 1..exp {
         coeff = multiply(2, coeff, &log_table, &antilog_table);
-        result = multiply_polynomials(&result, &vec![coeff, 1], &log_table, &antilog_table);
+        result = multiply_polynomials(&result, &vec![1, coeff], &log_table, &antilog_table);
     }
     result
 }
@@ -72,12 +72,7 @@ pub(crate) fn adjust_then_xor(
     antilog_table: &Vec<u8>,
 ) -> Vec<u8> {
     // generator must be multiplies with main coeff of message
-    let generator = multiply_polynomials(
-        &vec![message.last().unwrap().clone()],
-        &generator,
-        &log_table,
-        &antilog_table,
-    );
+    let generator = multiply_polynomials(&vec![message[0]], &generator, &log_table, &antilog_table);
 
     let mut result: Vec<u8> = vec![0; generator.len()];
 
