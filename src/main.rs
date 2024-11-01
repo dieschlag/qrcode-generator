@@ -2,8 +2,6 @@ use encoder::encoder;
 use reed_solomon::reed_solomon;
 mod encoder;
 mod reed_solomon;
-use reed_solomon::polynomials::init_tables;
-use reed_solomon::polynomials::multiply_polynomials;
 
 fn main() {
     // TODO: Error management
