@@ -1,9 +1,16 @@
 use encoder::encoder;
+use reed_solomon::reed_solomon;
 
 mod encoder;
+mod reed_solomon;
 
 fn main() {
     // TODO: Error management
     let string = "hello world";
-    let _ = encoder(String::from(string));
+    let _encoded_data = encoder(String::from(string));
+
+    let ecc_words = reed_solomon(vec![
+        17, 236, 17, 236, 17, 236, 64, 67, 77, 220, 114, 209, 120, 11, 91, 32,
+    ]);
+    println!("{ecc_words:?}");
 }
