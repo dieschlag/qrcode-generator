@@ -48,5 +48,5 @@ pub(crate) fn encoder(text: String) -> Result<Vec<u8>, Box<dyn Error>> {
     }
     println!();
 
-    return Ok(result);
+    Ok(result)
 }
