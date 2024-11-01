@@ -43,7 +43,7 @@ pub(crate) fn encoder(text: String) -> Result<Vec<u8>, Box<dyn Error>> {
 
     // Displaying result as a single bit stream
     println!("Final encoding as a single bit stream: ");
-    for byte in result {
+    for byte in &result {
         print!("{byte:08b}");
     }
     println!();
