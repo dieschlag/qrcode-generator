@@ -105,12 +105,26 @@ pub(crate) fn module_placement(data: Vec<u8>) {
         if i % 2 == 0 {
             for j in 0..(n - 9) {
                 result[(n - 1 - j) * n + n - 1 - 2 * i] = bits.next().unwrap();
+                result[(n - 1 - j) * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
+            }
+        } else {
+            for j in 9..n {
+                result[j * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
+                result[j * n + n - 1 - (2 * i)] = bits.next().unwrap();
+            }
+        }
+    }
+
+    for i in 0..2 {
+        if i % 2 == 0 {
+            for j in 0..(n - 1) {
+                result[(n - 1 - j) * n + n - 1 - 2 * i] = bits.next().unwrap();
                 count += 1;
                 result[(n - 1 - j) * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
                 count += 1;
             }
         } else {
-            for j in 9..n {
+            for j in 0..n {
                 result[j * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
                 count += 1;
                 result[j * n + n - 1 - (2 * i)] = bits.next().unwrap();
@@ -118,17 +132,6 @@ pub(crate) fn module_placement(data: Vec<u8>) {
             }
         }
     }
-
-    // for i in 0..2 {
-    //     for j in 0..(n) {
-    //         if
-    //         let first = bits.next().unwrap();
-    //         let second = bits.next().unwrap();
-
-    //         result[(n - 1 - j) * n + n - 1 - 2 * i] = first;
-    //         result[(n - 1 - j) * n + n - 1 - (2 * i + 1)] = second;
-    //     }
-    // }
 
     // Display result for verification
     display(&result, n);
@@ -139,7 +142,7 @@ fn display(list: &Vec<u8>, n: usize) {
     for i in 0..n {
         let mut line = String::new();
         for j in 0..n {
-            line.push_str(&format!(" {}", &list[i * n + j].to_string()));
+            line.push_str(&format!(" {} ", &list[i * n + j].to_string()));
         }
         println!("{line}");
     }
