@@ -2,6 +2,7 @@ use encoder::encoder;
 use module_placement::module_placement;
 use reed_solomon::reed_solomon;
 
+mod data_masking;
 mod encoder;
 mod module_placement;
 mod reed_solomon;
