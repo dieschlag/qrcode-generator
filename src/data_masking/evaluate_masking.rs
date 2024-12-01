@@ -1,13 +1,15 @@
-pub(crate) fn evaluate_masking(data: Vec<u8>) {
+pub(crate) fn evaluate_masking(data: Vec<u8>) -> u32 {
     let mut penalty = 0;
     let n = 21;
-
-    // --------------------- Line of 5+ ---------------------
 
     let vertical_penalties = vertical_penalty(&data, n);
     let horizontal_penalties = horizontal_penalty(&data, n);
 
-    penalty = vertical_penalties + horizontal_penalties
+    let square_penalties = square_penalty(&data, n);
+
+    let ratio_penalties = ratio_penalty(&data, n);
+
+    vertical_penalties + horizontal_penalties + ratio_penalties + square_penalties
 }
 
 pub(crate) fn vertical_penalty(data: &Vec<u8>, n: usize) -> u32 {
@@ -124,20 +126,15 @@ pub fn ratio_penalty(data: &Vec<u8>, n: usize) -> u32 {
     let black_count = data.iter().filter(|&&value| value == 1).count();
     let percentage_black = (black_count as f64 / total_modules as f64) * 100.0;
 
-    // Step 2: Find the closest multiple of 5
     let closest_multiple_of_5 = (percentage_black / 5.0).floor() * 5.0;
-    println!("{}", closest_multiple_of_5);
-    // Step 3: Calculate the absolute distances from 50
+
     let abs_original = (closest_multiple_of_5 + 5.0 - 50.0).abs();
     let abs_closest = (closest_multiple_of_5 - 50.0).abs();
-    println!("{}", abs_original);
-    println!("{}", abs_closest);
-    // Step 4: Divide each absolute distance by 5 and take the smallest number
+
     let distance_original = abs_original / 5.0;
     let distance_closest = abs_closest / 5.0;
     let smallest_distance = distance_original.min(distance_closest);
-    println!("{}", smallest_distance);
-    // Step 5: Multiply the smallest number by 10 and add it to the penalty
+
     let penalty = (smallest_distance * 10.0).round() as u32;
 
     penalty
