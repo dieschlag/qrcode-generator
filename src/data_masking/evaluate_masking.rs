@@ -66,16 +66,13 @@ pub(crate) fn horizontal_penalty(data: &Vec<u8>, n: usize) -> u32 {
 pub fn square_penalty(data: &Vec<u8>, n: usize) -> u32 {
     let mut penalty = 0;
 
-    // Loop through each possible top-left corner of a 2x2 square
     for row in 0..(n - 1) {
         for col in 0..(n - 1) {
-            // Compute the indices of the four elements in the 2x2 square
             let top_left = row * n + col;
             let top_right = row * n + col + 1;
             let bottom_left = (row + 1) * n + col;
             let bottom_right = (row + 1) * n + col + 1;
 
-            // Check if all elements in the square are the same
             if data[top_left] == data[top_right]
                 && data[top_left] == data[bottom_left]
                 && data[top_left] == data[bottom_right]
@@ -121,7 +118,6 @@ pub(crate) fn pattern_penalty(data: &Vec<u8>, n: usize) -> u32 {
 }
 
 pub fn ratio_penalty(data: &Vec<u8>, n: usize) -> u32 {
-    // Step 1: Calculate the percentage of black modules
     let total_modules = n * n;
     let black_count = data.iter().filter(|&&value| value == 1).count();
     let percentage_black = (black_count as f64 / total_modules as f64) * 100.0;
