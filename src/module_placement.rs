@@ -23,7 +23,7 @@ impl Chain {
 /// Third step in QR Code generation before masking data.
 /// Module placement uses a 1-D vector to represent data. This vector represents a square matrix of size n, with a new line every n elements in the vector.
 /// The number 1 corresponds to black modules and 0 to white modules.
-pub(crate) fn module_placement(data: Vec<u8>) {
+pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
     //
 
     println!("**************************** Module Placement ****************************\n");
@@ -162,10 +162,11 @@ pub(crate) fn module_placement(data: Vec<u8>) {
 
     // Display result for verification
     display(&result, n);
+    result
 }
 
 /// Used to display the values inside the matrix
-fn display(list: &Vec<u8>, n: usize) {
+pub(crate) fn display(list: &Vec<u8>, n: usize) {
     println!("Result matrix is:\n");
     for i in 0..n {
         for j in 0..n {

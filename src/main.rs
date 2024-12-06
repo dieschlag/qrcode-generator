@@ -1,3 +1,4 @@
+use data_masking::data_masking::data_masking;
 use encoder::encoder;
 use module_placement::module_placement;
 use reed_solomon::reed_solomon;
@@ -18,5 +19,7 @@ fn main() {
         96, 77, 236, 35, 52, 244,
     ];
 
-    module_placement(data);
+    let matrix = module_placement(data);
+    // data_masking(matrix);
+    data_masking(vec![0; 21 * 21])
 }
