@@ -1,4 +1,4 @@
-use data_masking::data_masking::data_masking;
+use data_masking::data_masking;
 use encoder::encoder;
 use module_placement::module_placement;
 use reed_solomon::reed_solomon;
