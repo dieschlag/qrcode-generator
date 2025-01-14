@@ -1,5 +1,3 @@
-use crate::module_placement::display;
-
 // Fist mask
 
 pub(crate) fn apply_one_mask(bit: &mut u8, row: usize, col: usize) {
