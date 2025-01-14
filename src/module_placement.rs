@@ -167,7 +167,6 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
 
 /// Used to display the values inside the matrix
 pub(crate) fn display(list: &Vec<u8>, n: usize) {
-    println!("Result matrix is:\n");
     for i in 0..n {
         for j in 0..n {
             print!("{:2}", &list[i * n + j].to_string())

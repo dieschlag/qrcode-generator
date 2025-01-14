@@ -126,29 +126,29 @@ pub(crate) fn four_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
 
 // Fifth mask
 
-pub(crate) fn apply_fifth_mask(bit: &mut u8, row: usize, column: usize) {
+pub(crate) fn apply_five_mask(bit: &mut u8, row: usize, column: usize) {
     if (row / 2 + column / 3) % 2 == 0 {
         switch(bit)
     }
 }
 
-pub(crate) fn fifth_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
+pub(crate) fn five_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
     for i in 9..n {
         for j in (n - 8)..n {
-            apply_fifth_mask(&mut data[i * n + j], i, j)
+            apply_five_mask(&mut data[i * n + j], i, j)
         }
     }
     for i in 0..n {
         for j in 9..(n - 8) {
             if i != 7 {
-                apply_fifth_mask(&mut data[i * n + j], i, j)
+                apply_five_mask(&mut data[i * n + j], i, j)
             }
         }
     }
     for i in 9..(n - 8) {
         for j in 0..9 {
             if j != 7 {
-                apply_fifth_mask(&mut data[i * n + j], i, j)
+                apply_five_mask(&mut data[i * n + j], i, j)
             }
         }
     }
