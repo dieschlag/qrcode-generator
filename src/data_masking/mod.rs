@@ -54,10 +54,24 @@ pub(crate) fn data_masking(data: Vec<u8>) {
     println!("Seventh Score is: {}\n", seven_score);
 
     println!("Eigth mask \n");
-    let eigth_mask = eigth_mask(data.clone(), n);
-    display(&eigth_mask, n);
-    let eigth_score = evaluate_masking(eigth_mask);
-    println!("Eight Score is: {}\n", eigth_score);
+    let eight_mask = eigth_mask(data.clone(), n);
+    display(&eight_mask, n);
+    let eight_score = evaluate_masking(eight_mask);
+    println!("Eight Score is: {}\n", eight_score);
+
+    let best_score = [
+        one_score,
+        two_score,
+        three_score,
+        four_score,
+        five_score,
+        six_score,
+        seven_score,
+        eight_score,
+    ]
+    .iter()
+    .min()
+    .unwrap();
 }
 
 #[cfg(test)]
