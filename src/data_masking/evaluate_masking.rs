@@ -1,5 +1,4 @@
-pub(crate) fn evaluate_masking(data: Vec<u8>) -> u32 {
-    let mut penalty = 0;
+pub(crate) fn evaluate_masking(data: &Vec<u8>) -> u32 {
     let n = 21;
 
     let vertical_penalties = vertical_penalty(&data, n);
