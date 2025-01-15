@@ -83,6 +83,8 @@ pub(crate) fn data_masking(data: Vec<u8>) -> Vec<u8> {
     ];
 
     let best_mask = list_mask.get(index).unwrap();
+    println!("Best mask applied is: {}", index);
+    display(best_mask, 21);
     (*best_mask).clone()
 }
 
