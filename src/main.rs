@@ -24,5 +24,5 @@ fn main() {
     let matrix = module_placement(data);
     // data_masking(matrix);
     let data_with_mask = data_masking(matrix);
-    let vec = version_bits("H", 3);
+    let vec = version_bits("L", 4);
 }
