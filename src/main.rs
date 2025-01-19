@@ -2,6 +2,7 @@ use data_masking::data_masking;
 use encoder::encoder;
 use module_placement::module_placement;
 use reed_solomon::reed_solomon;
+use versioning::version_bits;
 
 mod data_masking;
 mod encoder;
@@ -23,4 +24,5 @@ fn main() {
     let matrix = module_placement(data);
     // data_masking(matrix);
     let data_with_mask = data_masking(matrix);
+    let vec = version_bits("H", 3);
 }
