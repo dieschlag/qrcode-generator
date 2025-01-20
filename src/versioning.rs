@@ -21,7 +21,6 @@ pub(crate) fn version_bits(error_correction: &str, mask_number: u8) -> Vec<u8> {
         result.remove(0);
     }
     let mut generator: Vec<u8> = vec![1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1];
-    let (log_table, antilog_table) = init_tables();
 
     while result.len() > 10 {
         let padding = result.len() - generator.len();
