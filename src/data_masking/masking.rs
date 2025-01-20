@@ -14,14 +14,14 @@ pub(crate) fn one_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
     }
     for i in 0..n {
         for j in 9..(n - 8) {
-            if i != 7 {
+            if i != 6 {
                 apply_one_mask(&mut data[i * n + j], i, j)
             }
         }
     }
     for i in 9..(n - 8) {
         for j in 0..9 {
-            if j != 7 {
+            if j != 6 {
                 apply_one_mask(&mut data[i * n + j], i, j)
             }
         }
@@ -45,14 +45,14 @@ pub(crate) fn two_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
     }
     for i in 0..n {
         for j in 9..(n - 8) {
-            if i != 7 {
+            if i != 6 {
                 apply_two_mask(&mut data[i * n + j], i);
             }
         }
     }
     for i in 9..(n - 8) {
         for j in 0..9 {
-            if j != 7 {
+            if j != 6 {
                 apply_two_mask(&mut data[i * n + j], i);
             }
         }
@@ -76,14 +76,14 @@ pub(crate) fn three_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
     }
     for i in 0..n {
         for j in 9..(n - 8) {
-            if i != 7 {
+            if i != 6 {
                 apply_three_mask(&mut data[i * n + j], i)
             }
         }
     }
     for i in 9..(n - 8) {
         for j in 0..9 {
-            if j != 7 {
+            if j != 6 {
                 apply_three_mask(&mut data[i * n + j], i)
             }
         }
@@ -107,14 +107,14 @@ pub(crate) fn four_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
     }
     for i in 0..n {
         for j in 9..(n - 8) {
-            if i != 7 {
+            if i != 6 {
                 apply_four_mask(&mut data[i * n + j], i, j)
             }
         }
     }
     for i in 9..(n - 8) {
         for j in 0..9 {
-            if j != 7 {
+            if j != 6 {
                 apply_four_mask(&mut data[i * n + j], i, j)
             }
         }
@@ -138,14 +138,14 @@ pub(crate) fn five_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
     }
     for i in 0..n {
         for j in 9..(n - 8) {
-            if i != 7 {
+            if i != 6 {
                 apply_five_mask(&mut data[i * n + j], i, j)
             }
         }
     }
     for i in 9..(n - 8) {
         for j in 0..9 {
-            if j != 7 {
+            if j != 6 {
                 apply_five_mask(&mut data[i * n + j], i, j)
             }
         }
@@ -169,14 +169,14 @@ pub(crate) fn six_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
     }
     for i in 0..n {
         for j in 9..(n - 8) {
-            if i != 7 {
+            if i != 6 {
                 apply_six_mask(&mut data[i * n + j], i, j)
             }
         }
     }
     for i in 9..(n - 8) {
         for j in 0..9 {
-            if j != 7 {
+            if j != 6 {
                 apply_six_mask(&mut data[i * n + j], i, j)
             }
         }
@@ -200,14 +200,14 @@ pub(crate) fn seven_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
     }
     for i in 0..n {
         for j in 9..(n - 8) {
-            if i != 7 {
+            if i != 6 {
                 apply_seven_mask(&mut data[i * n + j], i, j)
             }
         }
     }
     for i in 9..(n - 8) {
         for j in 0..9 {
-            if j != 7 {
+            if j != 6 {
                 apply_seven_mask(&mut data[i * n + j], i, j)
             }
         }
@@ -231,14 +231,14 @@ pub(crate) fn eigth_mask(mut data: Vec<u8>, n: usize) -> Vec<u8> {
     }
     for i in 0..n {
         for j in 9..(n - 8) {
-            if i != 7 {
+            if i != 6 {
                 apply_eigth_mask(&mut data[i * n + j], i, j)
             }
         }
     }
     for i in 9..(n - 8) {
         for j in 0..9 {
-            if j != 7 {
+            if j != 6 {
                 apply_eigth_mask(&mut data[i * n + j], i, j)
             }
         }
