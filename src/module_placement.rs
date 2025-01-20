@@ -96,7 +96,7 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
 
     // ===== Dark Module =====
 
-    result[(n - 7) * n + 8] = 1;
+    result[(n - 8) * n + 8] = 1;
 
     // ======================================= Data placement =======================================
 
