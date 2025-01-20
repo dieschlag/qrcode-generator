@@ -65,11 +65,11 @@ pub(crate) fn place_version_bits(data: Vec<u8>, version_bits: Vec<u8>) -> Vec<u8
         }
         if i == 7 {
             result[8 * n + i + 1] = version_bits[i];
-            result[8 * n + n + 15 - i] = version_bits[i];
+            result[8 * n + (n - (15 - i))] = version_bits[i];
         }
         if i == 8 {
             result[7 * n + i] = version_bits[i];
-            result[8 * n + n + 15 - i] = version_bits[i];
+            result[8 * n + (n - (15 - i))] = version_bits[i];
         }
         if i > 8 {
             result[8 * n + (n - (15 - i))] = version_bits[i];
