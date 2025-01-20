@@ -8,7 +8,7 @@ use crate::module_placement::display;
 pub(crate) mod evaluate_masking;
 pub(crate) mod masking;
 
-pub(crate) fn data_masking(data: Vec<u8>) -> Vec<u8> {
+pub(crate) fn data_masking(data: Vec<u8>) -> (Vec<u8>, u8) {
     let n = 21;
     // =============== Applying first mask ===============
     println!("First mask \n");
@@ -85,7 +85,7 @@ pub(crate) fn data_masking(data: Vec<u8>) -> Vec<u8> {
     let best_mask = list_mask.get(index).unwrap();
     println!("Best mask applied is: {}", index);
     display(best_mask, 21);
-    (*best_mask).clone()
+    ((*best_mask).clone(), index as u8)
 }
 
 #[cfg(test)]
