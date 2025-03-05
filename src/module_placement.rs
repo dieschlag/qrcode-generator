@@ -109,9 +109,8 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
             }
         } else {
             for j in 9..n {
-                result[j * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
-
                 result[j * n + n - 1 - (2 * i)] = bits.next().unwrap();
+                result[j * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
             }
         }
     }
@@ -119,19 +118,18 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
     // ===== Space bewtween two finders =====
 
     for i in 0..2 {
-        if i % 2 == 1 {
+        if i % 2 == 0 {
             for j in 0..n {
                 if j != n - 7 {
                     result[(n - 1 - j) * n + n - 9 - 2 * i] = bits.next().unwrap();
-
                     result[(n - 1 - j) * n + n - 9 - (2 * i + 1)] = bits.next().unwrap();
                 }
             }
         } else {
             for j in 0..n {
                 if j != 6 {
-                    result[j * n + n - 9 - (2 * i + 1)] = bits.next().unwrap();
                     result[j * n + n - 9 - (2 * i)] = bits.next().unwrap();
+                    result[j * n + n - 9 - (2 * i + 1)] = bits.next().unwrap();
                 }
             }
         }
@@ -149,8 +147,8 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
     for i in 0..3 {
         if i % 2 == 0 {
             for j in 0..4 {
-                result[(9 + j) * n + (4 - 2 * i)] = bits.next().unwrap();
                 result[(9 + j) * n + (5 - 2 * i)] = bits.next().unwrap();
+                result[(9 + j) * n + (4 - 2 * i)] = bits.next().unwrap();
             }
         } else {
             for j in 0..4 {

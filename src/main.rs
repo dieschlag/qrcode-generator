@@ -16,11 +16,10 @@ fn main() {
     // TODO: Error management
     let string = "hello";
     let encoded_data = encoder(String::from(string)).unwrap();
-    let ecc_data = reed_solomon(encoded_data.clone());
+    let ecc_data = reed_solomon(encoded_data.clone(), 7);
     println!("{ecc_data:?}");
     let full_data = [encoded_data, ecc_data].concat();
     let matrix = module_placement(full_data);
-    // data_masking(matrix);
     let (data_with_mask, mask_number) = data_masking(matrix);
     let version_bits = version_bits("L", mask_number);
     let final_matrix = place_version_bits(data_with_mask, version_bits);

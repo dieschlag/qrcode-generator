@@ -2,7 +2,7 @@ use polynomials::{init_tables, multiply, multiply_polynomials};
 
 pub(crate) mod polynomials;
 
-pub(crate) fn reed_solomon(mut message: Vec<u8>) -> Vec<u8> {
+pub(crate) fn reed_solomon(mut message: Vec<u8>, number_ecc: u32) -> Vec<u8> {
     println!("**************************** Appying reed_solomons ****************************\n\n");
     println!("Received data: {message:?}");
 
@@ -15,8 +15,8 @@ pub(crate) fn reed_solomon(mut message: Vec<u8>) -> Vec<u8> {
 
     // Parameters for desired qrcode
     let number_divisions = message.len(); // Number of iterations to get error correction codewords, also represents padding length for generator
-    let number_ecc = 7; // Number of ecc we want to get, TODO: determine dynamically, here 7 for 1L
     let mut generator = get_generator(number_ecc); // Generator has shape (x+1)(x+2)...(x+2^n) where is the number of ecc we want
+    println!("{generator:?}");
     let message_padding_length = generator.len(); // Used to determine padding for message
 
     println!("Generator has order: {number_ecc}");
@@ -60,6 +60,15 @@ pub(crate) fn get_generator(exp: u32) -> Vec<u8> {
     for _ in 1..exp {
         coeff = multiply(2, coeff, &log_table, &antilog_table);
         result = multiply_polynomials(&result, &vec![1, coeff], &log_table, &antilog_table);
+    }
+    let mut expo_coeff: Vec<u8>;
+    for coeff in result.clone() {
+        print!("{} ", antilog_table[coeff as usize])
+    }
+    println!(" ");
+    println!("{result:?}");
+    for coeff in result.clone() {
+        print!("{} ", log_table[coeff as usize])
     }
     result
 }
