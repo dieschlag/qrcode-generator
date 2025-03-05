@@ -15,7 +15,7 @@ pub(crate) fn reed_solomon(mut message: Vec<u8>) -> Vec<u8> {
 
     // Parameters for desired qrcode
     let number_divisions = message.len(); // Number of iterations to get error correction codewords, also represents padding length for generator
-    let number_ecc = 10; // Number of ecc we want to get, TODO: determine dynamically
+    let number_ecc = 7; // Number of ecc we want to get, TODO: determine dynamically, here 7 for 1L
     let mut generator = get_generator(number_ecc); // Generator has shape (x+1)(x+2)...(x+2^n) where is the number of ecc we want
     let message_padding_length = generator.len(); // Used to determine padding for message
 

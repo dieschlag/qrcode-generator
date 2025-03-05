@@ -22,7 +22,7 @@ fn main() {
     let matrix = module_placement(full_data);
     // data_masking(matrix);
     let (data_with_mask, mask_number) = data_masking(matrix);
-    let version_bits = version_bits("L", 0);
+    let version_bits = version_bits("L", mask_number);
     let final_matrix = place_version_bits(data_with_mask, version_bits);
     image_generation(final_matrix);
 }
