@@ -50,3 +50,19 @@ pub(crate) fn encoder(text: String) -> Result<Vec<u8>, Box<dyn Error>> {
 
     Ok(result)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_encoder() -> Result<(), Box<dyn Error>> {
+        let result = encoder(String::from("hello"));
+        let expected: Vec<u8> = vec![
+            64, 86, 134, 86, 198, 198, 240, 236, 17, 236, 17, 236, 17, 236, 17, 236, 17, 236, 17,
+        ];
+        println!("{expected:?}");
+        assert_eq!(result?, expected);
+        Ok(())
+    }
+}

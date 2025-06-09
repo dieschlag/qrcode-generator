@@ -26,23 +26,23 @@ fn main() {
 
     let encoded_data = encoder(String::from(input)).unwrap();
 
-    let ecc_data = reed_solomon(encoded_data.clone(), 7);
+    // let ecc_data = reed_solomon(encoded_data.clone(), 7);
 
-    println!("{ecc_data:?}");
-    println!("");
+    // println!("{ecc_data:?}");
+    // println!("");
 
-    let full_data = [encoded_data, ecc_data].concat();
+    // let full_data = [encoded_data, ecc_data].concat();
 
-    println!("Full data in bits");
+    // println!("Full data in bits");
 
-    for bit in full_data.clone() {
-        print!("{bit:08b}");
-    }
+    // for bit in full_data.clone() {
+    //     print!("{bit:08b}");
+    // }
 
-    let matrix = module_placement(full_data);
-    let (data_with_mask, mask_number) = data_masking(matrix);
-    let version_bits = version_bits("L", mask_number);
-    let final_matrix = place_version_bits(data_with_mask, version_bits);
+    // let matrix = module_placement(full_data);
+    // let (data_with_mask, mask_number) = data_masking(matrix);
+    // let version_bits = version_bits("L", mask_number);
+    // let final_matrix = place_version_bits(data_with_mask, version_bits);
 
-    image_generation(final_matrix);
+    // image_generation(final_matrix);
 }

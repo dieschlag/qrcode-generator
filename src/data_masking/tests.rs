@@ -79,6 +79,4 @@ mod tests {
 
         assert_eq!(ratio_penalty(&data, n), 30);
     }
-
-    
 }
