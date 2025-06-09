@@ -1,27 +1,27 @@
-/// Goal is to get a vector of 1 and 0 matching visual distribution of bits on our QR code before data masking
+/// Goal is to get a vector of 1 and 0 matching visual distribution of bits on our QR code before bits masking
 /// We will use a 1-D vector to represent this distribution
 /// This 1-D vector will be used to encode matrix, considering each p elements, we have a new line where n is the number of columns we would have in our matric
 /// To note: with QR codes, we use square matrixes so the n is unamiguous between columns and lines
 
-/// Data to encode in QR Code is represented as a Chain, which is a wrapper over a classic vector, with a tracker of current index to travel along data;
+/// bits to encode in QR Code is represented as a Chain, which is a wrapper over a classic vector, with a tracker of current index to travel along bits;
 pub(crate) struct Chain {
-    pub(crate) data: Vec<u8>,
+    pub(crate) bits: Vec<u8>,
     pub(crate) index: usize,
 }
 
 impl Chain {
-    pub(crate) fn new(data: Vec<u8>) -> Chain {
-        Chain { data, index: 0 }
+    pub(crate) fn new(bits: Vec<u8>) -> Chain {
+        Chain { bits, index: 0 }
     }
     pub(crate) fn next(&mut self) -> Option<u8> {
-        let result = self.data.get(self.index).copied();
+        let result = self.bits.get(self.index).copied();
         self.index += 1;
         result
     }
 }
 
-/// Third step in QR Code generation before masking data.
-/// Module placement uses a 1-D vector to represent data. This vector represents a square matrix of size n, with a new line every n elements in the vector.
+/// Third step in QR Code generation before masking bits.
+/// Module placement uses a 1-D vector to represent bits. This vector represents a square matrix of size n, with a new line every n elements in the vector.
 /// The number 1 corresponds to black modules and 0 to white modules.
 pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
     //
@@ -32,6 +32,7 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
 
     // We define, which is simply the len of qrcode, TODO: make it dynamical
     let n = 21;
+    let mut data = data;
     println!("Len of QR Code is: {}\n", n);
 
     // Vector containing each bit of the bit stream composed of encoded message + error correction codewords
@@ -44,10 +45,12 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
         }
     }
 
-    // Initiate Chain instance
-    let mut bits = Chain::new(bits);
+    println!("{bits:?}");
 
-    // Initiate result vector
+    // // Initiate Chain instance
+    // let mut bits = Chain::new(bits);
+
+    // // Initiate result vector
     let mut result: Vec<u8> = vec![0; n * n];
 
     // ======================================= Patterns placement =======================================
@@ -98,19 +101,19 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
 
     result[(n - 8) * n + 8] = 1;
 
-    // ======================================= Data placement =======================================
+    // ======================================= bits placement =======================================
 
     // ===== Space under right finder =====
     for i in 0..4 {
         if i % 2 == 0 {
             for j in 0..(n - 9) {
-                result[(n - 1 - j) * n + n - 1 - 2 * i] = bits.next().unwrap();
-                result[(n - 1 - j) * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
+                result[(n - 1 - j) * n + n - 1 - 2 * i] = bits.pop().unwrap();
+                result[(n - 1 - j) * n + n - 1 - (2 * i + 1)] = bits.pop().unwrap();
             }
         } else {
             for j in 9..n {
-                result[j * n + n - 1 - (2 * i)] = bits.next().unwrap();
-                result[j * n + n - 1 - (2 * i + 1)] = bits.next().unwrap();
+                result[j * n + n - 1 - (2 * i)] = bits.pop().unwrap();
+                result[j * n + n - 1 - (2 * i + 1)] = bits.pop().unwrap();
             }
         }
     }
@@ -121,15 +124,15 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
         if i % 2 == 0 {
             for j in 0..n {
                 if j != n - 7 {
-                    result[(n - 1 - j) * n + n - 9 - 2 * i] = bits.next().unwrap();
-                    result[(n - 1 - j) * n + n - 9 - (2 * i + 1)] = bits.next().unwrap();
+                    result[(n - 1 - j) * n + n - 9 - 2 * i] = bits.pop().unwrap();
+                    result[(n - 1 - j) * n + n - 9 - (2 * i + 1)] = bits.pop().unwrap();
                 }
             }
         } else {
             for j in 0..n {
                 if j != 6 {
-                    result[j * n + n - 9 - (2 * i)] = bits.next().unwrap();
-                    result[j * n + n - 9 - (2 * i + 1)] = bits.next().unwrap();
+                    result[j * n + n - 9 - (2 * i)] = bits.pop().unwrap();
+                    result[j * n + n - 9 - (2 * i + 1)] = bits.pop().unwrap();
                 }
             }
         }
@@ -138,8 +141,8 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
     // ===== Filling gap before vertical timing =====
 
     for j in 0..4 {
-        result[(n - 9 - j) * n + 8] = bits.next().unwrap();
-        result[(n - 9 - j) * n + 7] = bits.next().unwrap();
+        result[(n - 9 - j) * n + 8] = bits.pop().unwrap();
+        result[(n - 9 - j) * n + 7] = bits.pop().unwrap();
     }
 
     // ===== Filling space before the two right finder patterns =====
@@ -147,13 +150,13 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
     for i in 0..3 {
         if i % 2 == 0 {
             for j in 0..4 {
-                result[(9 + j) * n + (5 - 2 * i)] = bits.next().unwrap();
-                result[(9 + j) * n + (4 - 2 * i)] = bits.next().unwrap();
+                result[(9 + j) * n + (5 - 2 * i)] = bits.pop().unwrap();
+                result[(9 + j) * n + (4 - 2 * i)] = bits.pop().unwrap();
             }
         } else {
             for j in 0..4 {
-                result[(n - 9 - j) * n + (5 - 2 * i)] = bits.next().unwrap();
-                result[(n - 9 - j) * n + (4 - 2 * i)] = bits.next().unwrap();
+                result[(n - 9 - j) * n + (5 - 2 * i)] = bits.pop().unwrap();
+                result[(n - 9 - j) * n + (4 - 2 * i)] = bits.pop().unwrap();
             }
         }
     }

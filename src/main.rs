@@ -18,7 +18,13 @@ fn main() {
     let encoded_data = encoder(String::from(string)).unwrap();
     let ecc_data = reed_solomon(encoded_data.clone(), 7);
     println!("{ecc_data:?}");
+
+    println!("");
     let full_data = [encoded_data, ecc_data].concat();
+    println!("Full data in bits");
+    for bit in full_data.clone() {
+        print!("{bit:08b}");
+    }
     let matrix = module_placement(full_data);
     let (data_with_mask, mask_number) = data_masking(matrix);
     let version_bits = version_bits("L", mask_number);
