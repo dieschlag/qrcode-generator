@@ -26,7 +26,7 @@ fn main() {
 
     let encoded_data = encoder(String::from(input)).unwrap();
 
-    // let ecc_data = reed_solomon(encoded_data.clone(), 7);
+    let ecc_data = reed_solomon(encoded_data.clone(), 7);
 
     // println!("{ecc_data:?}");
     // println!("");

@@ -92,3 +92,13 @@ pub(crate) fn adjust_then_xor(
 
     result
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_adjust_and_xor() {}
+    fn test_get_generator() {}
+    fn test_reed_solomon() {}
+}

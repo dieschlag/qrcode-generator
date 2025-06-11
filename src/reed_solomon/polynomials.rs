@@ -1,3 +1,14 @@
+/// We work with numbers considered inside the Galois Field GF(256)
+/// and since them with bit-wise modulo 2 arithmetic, the result of
+/// an addition or substraction in that field is equivalent to a XOR.
+///
+/// All numbers inside GF(256) can be represented using powers of 2,
+/// so any element a can be written as a = 2^i.
+///
+/// The QR Code specification specifies to use byte-wise modulo
+/// 100011101, which is 285. So when a number is larger than 256, it
+/// should be XORed with 285.   
+
 /// Initilaizes logarithmic and anti-logarithmic tables in GF(256)
 /// Log and anti-log tables work such that if we have a^i = x, then:
 ///     log[x] = i ; antilog[i] = x
@@ -42,10 +53,6 @@ pub(crate) fn multiply(a: u8, b: u8, log_table: &Vec<u8>, antilog_table: &Vec<u8
         antilog_table[log_result]
     }
 }
-
-// pub(crate) fn add(a: u8, b: u8) -> u8 {
-//     a ^ b
-// }
 
 /// Mutliplies two polynomials reprensented by vectors of GF(256) elements.
 /// Vectors are such that first element is the main term of the polynomial.
