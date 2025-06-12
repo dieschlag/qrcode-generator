@@ -28,16 +28,16 @@ fn main() {
 
     let ecc_data = reed_solomon(encoded_data.clone(), 7);
 
-    // println!("{ecc_data:?}");
-    // println!("");
+    println!("{ecc_data:?}");
+    println!("");
 
-    // let full_data = [encoded_data, ecc_data].concat();
+    let full_data = [encoded_data, ecc_data].concat();
 
-    // println!("Full data in bits");
+    println!("Full data in bits");
 
-    // for bit in full_data.clone() {
-    //     print!("{bit:08b}");
-    // }
+    for bit in full_data.clone() {
+        print!("{bit:08b}");
+    }
 
     // let matrix = module_placement(full_data);
     // let (data_with_mask, mask_number) = data_masking(matrix);

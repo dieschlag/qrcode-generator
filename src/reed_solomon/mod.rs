@@ -98,7 +98,30 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_adjust_and_xor() {}
-    fn test_get_generator() {}
-    fn test_reed_solomon() {}
+    fn test_adjust_and_xor() {
+        let (log_table, antilog_table) = init_tables();
+        let message: Vec<u8> = vec![4, 7, 3];
+        let generator: Vec<u8> = vec![3, 1, 16, 4];
+        assert_eq!(
+            adjust_then_xor(message, &generator, &log_table, &antilog_table),
+            vec![8, 3, 67, 0]
+        )
+    }
+
+    #[test]
+    fn test_get_generator() {
+        assert_eq!(get_generator(7), vec![1, 127, 122, 154, 164, 11, 68, 117])
+    }
+
+    #[test]
+    fn test_reed_solomon() {
+        let message: Vec<u8> = vec![
+            32, 91, 11, 120, 209, 114, 220, 77, 67, 64, 236, 17, 236, 17, 236, 17,
+        ];
+        let number_ecc = 10;
+        assert_eq!(
+            reed_solomon(message, number_ecc),
+            vec![196, 35, 39, 119, 235, 215, 231, 226, 93, 23]
+        )
+    }
 }
