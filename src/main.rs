@@ -39,7 +39,7 @@ fn main() {
         print!("{bit:08b}");
     }
 
-    // let matrix = module_placement(full_data);
+    let matrix = module_placement(full_data);
     // let (data_with_mask, mask_number) = data_masking(matrix);
     // let version_bits = version_bits("L", mask_number);
     // let final_matrix = place_version_bits(data_with_mask, version_bits);
