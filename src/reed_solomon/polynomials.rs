@@ -127,4 +127,30 @@ mod tests {
             ]
         )
     }
+    #[test]
+    fn test_multiply() {
+        let (log_table, antilog_table) = init_tables();
+        let a: u8 = 5;
+        let b: u8 = 10;
+        assert_eq!(
+            multiply(a, b, &log_table, &antilog_table),
+            antilog_table
+                [(log_table[a as usize] as usize + log_table[b as usize] as usize) % 255 as usize]
+        );
+    }
+
+    #[test]
+    fn test_multiply_polynomials() {
+        let (log_table, antilog_table) = init_tables();
+        let p: Vec<u8> = vec![6, 3, 8, 2, 1];
+        let q: Vec<u8> = vec![1, 4, 5];
+        println!(
+            "{:?}",
+            multiply_polynomials(&p, &q, &log_table, &antilog_table)
+        );
+        assert_eq!(
+            multiply_polynomials(&p, &q, &log_table, &antilog_table),
+            vec![6, 27, 26, 45, 33, 14, 5]
+        )
+    }
 }
