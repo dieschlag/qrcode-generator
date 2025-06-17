@@ -3,23 +3,6 @@
 /// This 1-D vector will be used to encode matrix, considering each p elements, we have a new line where n is the number of columns we would have in our matric
 /// To note: with QR codes, we use square matrixes so the n is unamiguous between columns and lines
 
-/// bits to encode in QR Code is represented as a Chain, which is a wrapper over a classic vector, with a tracker of current index to travel along bits;
-pub(crate) struct Chain {
-    pub(crate) bits: Vec<u8>,
-    pub(crate) index: usize,
-}
-
-impl Chain {
-    pub(crate) fn new(bits: Vec<u8>) -> Chain {
-        Chain { bits, index: 0 }
-    }
-    pub(crate) fn next(&mut self) -> Option<u8> {
-        let result = self.bits.get(self.index).copied();
-        self.index += 1;
-        result
-    }
-}
-
 /// Third step in QR Code generation before masking bits.
 /// Module placement uses a 1-D vector to represent bits. This vector represents a square matrix of size n, with a new line every n elements in the vector.
 /// The number 1 corresponds to black modules and 0 to white modules.
@@ -32,20 +15,36 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
 
     // We define, which is simply the len of qrcode, TODO: make it dynamical
     let n = 21;
-    let mut data = data;
+    let data = data;
+    println!("The received data is:");
+    println!("{:?}", data);
     println!("Len of QR Code is: {}\n", n);
-
+    println!("");
     // Vector containing each bit of the bit stream composed of encoded message + error correction codewords
+    println!("The bits to place inside the matrix are:");
+    println!("");
     let mut bits: Vec<u8> = Vec::new();
     for value in data.iter() {
+        println!("New value in received data is: {}", value);
         let mut v = *value; // Creates a mutable copy to shift
         for _ in 0..8 {
-            bits.push((v & 128) >> 7); // AND with 128 to extract dominant bit
-            v <<= 1; // Shift left to prepare for the next bit
+            println!("Current value is: {:08b}", v);
+            let bit = v & 1;
+            println!("Current bit is: {}", bit); // AND with 128 to extract dominant bit
+            bits.push(bit);
+            v >>= 1; // Shift left to prepare for the next bit
         }
     }
 
-    println!("{bits:?}");
+    println!("");
+
+    println!("Bits to insert are:");
+
+    for bit in bits.iter() {
+        print!("{bit}")
+    }
+
+    println!("");
 
     // // Initiate Chain instance
     // let mut bits = Chain::new(bits);
@@ -161,6 +160,8 @@ pub(crate) fn module_placement(data: Vec<u8>) -> Vec<u8> {
         }
     }
 
+    println!("Matrix with data before masking is:");
+    println!("");
     // Display result for verification
     display(&result, n);
     result
@@ -205,12 +206,25 @@ mod tests {
             1, 1, 1, 1, 1, 1,
         ];
 
-        #[test]
-        fn test_zigzag_placement() {}
-
         println!("Expected data: ");
         display(&expected, 21);
 
         assert_eq!(module_placement(data), expected)
+    }
+
+    #[test]
+    fn test_zigzag_placement() {
+        let data: Vec<u8> = vec![
+            0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0,
+            1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1,
+            1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+            1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1,
+            0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0,
+            0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0,
+            0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1,
+            1, 1, 0, 0, 1,
+        ];
+        let expected: Vec<u8> = module_placement(data);
+        println!("");
     }
 }
